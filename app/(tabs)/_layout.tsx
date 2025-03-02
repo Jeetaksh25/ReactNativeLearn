@@ -2,12 +2,12 @@ import { StyleSheet, Text, View, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { Tabs, Redirect, Stack } from "expo-router";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { Icon } from "@expo/vector-icons/build/createIconSet";
+
 
 const TabsLayout = () => {
   return (
     <>
-      <Stack.Screen name="tabs" options={{ headerShown: true }} />
+      <Stack.Screen name="tabs" options={{ headerShown: false }} />
       <Tabs
         screenOptions={{
           tabBarShowLabel: true,

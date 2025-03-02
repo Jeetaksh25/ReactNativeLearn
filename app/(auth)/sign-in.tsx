@@ -131,6 +131,8 @@ const SignIn = () => {
             </Link>
           </Text>
         </View>
+
+        {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
       </ScrollView>
     </SafeAreaView>
   );
