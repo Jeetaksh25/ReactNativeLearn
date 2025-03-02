@@ -14,11 +14,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "package":"com.jsm.aora"
+        "backgroundColor": "#ffffff"
       },
-      "package":"com.jsm.aora"
-
+      "package": "com.jsm.aora"
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "345a8498-848f-4d01-9662-4592d26886fb"
+      }
     }
   }
 }
