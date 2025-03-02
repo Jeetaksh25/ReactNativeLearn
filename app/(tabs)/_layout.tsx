@@ -1,45 +1,97 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from "react-native";
+import React, { useState } from "react";
+import { Tabs, Redirect, Stack } from "expo-router";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { Icon } from "@expo/vector-icons/build/createIconSet";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const TabsLayout = () => {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+    <>
+      <Stack.Screen name="tabs" options={{ headerShown: true }} />
+      <Tabs
+        screenOptions={{
+          tabBarShowLabel: true,
+          tabBarActiveTintColor: "#FFA001",
+          tabBarInactiveTintColor: "gray",
+          tabBarStyle: {
+            backgroundColor: "#161622",
+            height: 60,
+            paddingTop: 5,
           },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: "Home",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <AntDesign
+                name="home"
+                color={color}
+                size={focused ? 25 : 20}
+                style={{ margin: 0 }}
+                key="home"
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="bookmark"
+          options={{
+            title: "Bookmark",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <AntDesign
+                name="staro"
+                color={color}
+                size={focused ? 25 : 20}
+                style={{ margin: 0 }}
+                key="bookmark"
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="create"
+          options={{
+            title: "Create",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <AntDesign
+                name="plus"
+                color={color}
+                size={focused ? 25 : 20}
+                style={{ margin: 0 }}
+                key="create"
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <AntDesign
+                name="user"
+                color={color}
+                size={focused ? 25 : 20}
+                style={{ margin: 0 }}
+                key="profile"
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </>
   );
-}
+};
+
+export default TabsLayout;
+
+const styles = StyleSheet.create({});
