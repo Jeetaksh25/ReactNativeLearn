@@ -1,7 +1,8 @@
 import { View, Text } from "react-native";
 import React from "react";
-import colors from "tailwindcss/colors";
+import colors, { black } from "tailwindcss/colors";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { theme } from "../theme/theme";
 
 interface AlertProps {
   actionText?: "muted" | "error" | "warning" | "success" | "info";
@@ -23,7 +24,7 @@ const AlertBox: React.FC<AlertProps> = ({ actionText = "info", desc }) => {
   return (
     <View
       style={{
-        padding: 10,
+        padding: theme.padding.md,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor:
@@ -37,16 +38,15 @@ const AlertBox: React.FC<AlertProps> = ({ actionText = "info", desc }) => {
             ? colors.blue[500]
             : colors.gray[500],
         flexDirection: "row",
-        gap: 5,
-        borderRadius: 8,
+        gap: theme.gap.sm,
+        borderRadius: theme.borderRadius.md,
         position: "absolute",
-        bottom: 0,
-        maxWidth: "95%",
-        height: "auto",
+        bottom: 30,
+        maxWidth: "90%",
       }}
     >
-      <AntDesign name={iconMap[actionText]} size={25} color="white" />
-      <Text style={{ color: "white", fontSize: 18 }}>{desc}</Text>
+      <AntDesign name={iconMap[actionText]} size={theme.fontSize.lg} color="white" style={{paddingLeft:theme.padding.sm}} />
+      <Text style={{ color: "white", fontSize: theme.fontSize.sm,padding:0,margin:0}}>{desc}</Text>
     </View>
   );
 };

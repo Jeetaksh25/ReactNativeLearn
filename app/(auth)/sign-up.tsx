@@ -54,7 +54,9 @@ const SignUp = () => {
       },2000)
 
     } catch (error: any) {
-      showAlert("error", error.message);
+      const errorMessage = error.message.split(": ")[1];
+      showAlert("error", errorMessage);
+      
     } finally {
       setIsSigningUp(false);
     }

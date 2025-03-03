@@ -62,7 +62,9 @@ const SignIn = () => {
         router.push("/home");
       },2000)
 
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.message.split(": ")[1]; 
+      showAlert("error", errorMessage);
       console.log(error);
     } finally {
       setIsLoggingIn(false);
