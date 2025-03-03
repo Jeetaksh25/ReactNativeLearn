@@ -11,6 +11,7 @@ import React from "react";
 import colors from "tailwindcss/colors";
 import { GestureDetectorBridge } from "react-native-screens";
 import { ViewStyle } from "@expo/html-elements/build/primitives/View";
+import { theme } from "../theme/theme";
 
 interface CutomButtonProps {
   title: string;
@@ -39,8 +40,8 @@ const CustomButton: React.FC<CutomButtonProps> = ({
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          padding: 12,
-          borderRadius: 8,
+          padding: theme.padding.md,
+          borderRadius: theme.borderRadius.md,
           backgroundColor: colors.orange[500],
         },
         containerStyles,
@@ -57,7 +58,7 @@ const CustomButton: React.FC<CutomButtonProps> = ({
           {icon && <View style={{ marginRight: 8 }}>{icon}</View>}
           <Text
             style={[
-              { color: "white", fontSize: 16, fontWeight: "bold" },
+              { color: "white", fontSize: theme.fontSize.md, fontWeight: "bold" },
               textStyles,
             ]}
           >

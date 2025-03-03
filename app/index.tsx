@@ -1,61 +1,60 @@
 import { View, StyleSheet, ScrollView, Image, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Button, ButtonText } from "@/components/ui/button";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import { useRouter, Link, Redirect} from "expo-router";
-import colors, { white } from "tailwindcss/colors";
+import { useRouter, Redirect } from "expo-router";
+import colors from "tailwindcss/colors";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
 import CustomButton from "@/comps/CustomButton";
 import { useGlobalContext } from "../context/GlobalProvider";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { theme } from "../theme/theme";
 
 export default function Layout() {
-  const {isLoading, isLoggedIn} = useGlobalContext();
-
-  if(!isLoading && isLoggedIn) {
-    return <Redirect href="/home"/>
-  }
-
+  const { isLoading, isLoggedIn } = useGlobalContext();
   const router = useRouter();
   const [colorMode, setColorMode] = useState<"light" | "dark">("light");
 
-  const toggleColorMode = () => {
-    setColorMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-  };
+  if (!isLoading && isLoggedIn) {
+    return <Redirect href="/home" />;
+  }
 
   return (
     <GluestackUIProvider mode={colorMode}>
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.gray[900] }]}>
+      <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.innerContainer}>
+            {/* Logo */}
             <Image source={images.logo} style={styles.logo} />
+
+            {/* Cards */}
             <Image source={images.cards} style={styles.cards} />
 
+            {/* Heading Section */}
             <View style={styles.headingContainer}>
               <Text style={styles.heading}>
                 Discover Endless Possibilities with <Text style={styles.highlightedText}>Aora</Text>
               </Text>
-              <Image source={images.path} style={styles.path} />
             </View>
 
+            {/* Subheading */}
             <Text style={styles.subheading}>
               Where creativity meets innovation. Embark on a journey of limitless exploration with Aora.
             </Text>
 
+            {/* Button */}
             <CustomButton
               title="Continue with Email"
               icon={<AntDesign name="arrowright" size={20} color="white" />}
               handlePress={() => router.push("/sign-in")}
               containerStyles={styles.buttonContainer}
-              textStyles={styles.buttonText}
               loadingText="Loading..."
             />
           </View>
         </ScrollView>
 
-        <StatusBar backgroundColor="#161622" style="light"/>
+        <StatusBar backgroundColor={colors.gray[900]} style="light" />
       </SafeAreaView>
     </GluestackUIProvider>
   );
@@ -64,74 +63,67 @@ export default function Layout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     backgroundColor: colors.gray[900],
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center", 
+    justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: theme.padding.lg,
   },
   innerContainer: {
     width: "100%",
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
-    gap: 10,
+    gap: 20,
+
   },
   logo: {
     width: 130,
     height: 84,
     resizeMode: "contain",
-    position: "absolute",
-    top: 60,
+    marginTop: 20,
+    alignSelf: "center",
   },
   cards: {
+    width: "90%",
     maxWidth: 380,
-    width: "100%",
-    height: 300,
+    height: 260,
     resizeMode: "contain",
-    position: "absolute",
-    top: 150,
+    marginTop: 20,
   },
   headingContainer: {
-    position: "relative",
-    marginTop: 140,
+    marginTop: 20,
+    alignItems: "center",
     textAlign: "center",
   },
   heading: {
-    fontSize: 30,
+    fontSize: theme.fontSize["2xl"],
     fontFamily: "Poppins-Bold",
     color: "white",
     textAlign: "center",
-    marginTop: 150,
   },
   highlightedText: {
     color: colors.orange[400],
   },
   path: {
-    width: 100,
-    height: 20,
-    position: "absolute",
-    bottom: -20,
-    right: -10,
-    marginVertical: 10,
+    width: 80,
+    height: 15,
+    resizeMode: "contain",
+    marginTop: 5,
   },
   subheading: {
-    fontSize: 14,
+    fontSize: theme.fontSize.lg,
     color: "white",
     textAlign: "center",
     fontFamily: "Poppins-Regular",
-    marginTop: 30,
+    paddingHorizontal: 10,
+    marginTop: 10,
   },
   buttonContainer: {
     marginTop: 20,
     backgroundColor: colors.orange[500],
-    paddingHorizontal: 40,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    width: "100%",
+    borderRadius: theme.borderRadius.md,
   },
 });

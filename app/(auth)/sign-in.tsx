@@ -9,6 +9,7 @@ import { Link } from "expo-router";
 import AlertBox from "../../comps/AlertBox";
 import { signIn } from "../../lib/appwrite";
 import { router } from "expo-router";
+import { theme } from "../../theme/theme";
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -146,20 +147,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray[900],
   },
   scrollContainer: {
-    flexGrow: 0.85,
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   innerContainer: {
     width: "100%",
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.fontSize.lg,
     gap: 20,
     height: "100%",
     justifyContent: "center",
   },
   text: {
     color: "white",
-    fontSize: 25,
+    fontSize: theme.fontSize.lg,
     fontWeight: "bold",
   },
   form: {
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: "white",
-    fontSize: 17,
+    fontSize: theme.fontSize.sm,
     textAlign: "center",
   },
 });

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import colors from "tailwindcss/colors";
+import {theme} from "../theme/theme"
 
 interface CustomFormFieldProps {
     title: string;
@@ -39,7 +40,7 @@ const FormField: React.FC<CustomFormFieldProps> = ({
       <Text style={styles.title}>{title}</Text>
       <View style={styles.input}>
         <TextInput
-          style={{ flex: 1, color: "white",fontSize: 18, fontFamily: "Poppins-Regular",alignItems: "center",alignSelf: "center"}}
+          style={{ flex: 1, color: "white",fontSize: theme.fontSize.md, fontFamily: "Poppins-Regular",alignItems: "center",alignSelf: "center"}}
           placeholder={placeholder}
           value={value}
           onChangeText={handleChangeText}
@@ -70,18 +71,18 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   title: {
-    fontSize: 18,
+    fontSize: theme.fontSize.md,
     fontWeight: "bold",
     fontFamily: "Poppins-Medium",
     color: "white",
   },
   input: {
-    height: 60,
-    paddingHorizontal: 12,
+    height: 50,
+    paddingHorizontal: theme.padding.md,
     backgroundColor: colors.gray[800],
     marginVertical: 5,
     color: "white",
-    borderRadius: 16,
+    borderRadius: theme.borderRadius.md,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

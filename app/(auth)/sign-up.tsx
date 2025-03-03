@@ -8,6 +8,7 @@ import CustomButton from "../../comps/CustomButton";
 import { Link, useRouter } from "expo-router";
 import { createUser } from "../../lib/appwrite";
 import AlertBox from "../../comps/AlertBox";
+import {theme} from "../../theme/theme"
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -115,7 +116,7 @@ const SignUp = () => {
               handlePress={submitHandler}
               textStyles={{
                 color: "white",
-                fontSize: 18,
+                fontSize: theme.fontSize.md,
                 fontFamily: "Poppins-Regular",
                 alignItems: "center",
                 alignSelf: "center",
@@ -145,20 +146,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray[900],
   },
   scrollContainer: {
-    flexGrow: 0.85,
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   innerContainer: {
     width: "100%",
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.padding.lg,
     gap: 20,
     height: "100%",
     justifyContent: "center",
   },
   text: {
     color: "white",
-    fontSize: 25,
+    fontSize: theme.fontSize.lg,
     fontWeight: "bold",
   },
   form: {
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: "white",
-    fontSize: 17,
+    fontSize: theme.fontSize.sm,
     textAlign: "center",
   },
 });
