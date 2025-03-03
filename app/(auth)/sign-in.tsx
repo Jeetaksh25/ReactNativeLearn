@@ -114,7 +114,7 @@ const SignIn = () => {
               handlePress={submitHandler}
               textStyles={{
                 color: "white",
-                fontSize: 18,
+                fontSize: theme.fontSize.md,
                 fontFamily: "Poppins-Regular",
                 alignItems: "center",
                 alignSelf: "center",

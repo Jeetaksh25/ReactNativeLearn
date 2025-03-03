@@ -7,7 +7,7 @@ import {
   StyleProp,
   TextStyle,
 } from "react-native";
-import React from "react";
+import React, {FC} from "react";
 import colors from "tailwindcss/colors";
 import { GestureDetectorBridge } from "react-native-screens";
 import { ViewStyle } from "@expo/html-elements/build/primitives/View";
@@ -23,7 +23,7 @@ interface CutomButtonProps {
   loadingText?: string;
 }
 
-const CustomButton: React.FC<CutomButtonProps> = ({
+const CustomButton: FC<CutomButtonProps> = ({
   title,
   icon,
   handlePress,
