@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import colors from "tailwindcss/colors";
-import {theme} from "../theme/theme"
+import Entypo from "react-native-vector-icons/Entypo";
+import { theme } from "@/theme/theme";
 
 interface CustomFormFieldProps {
     title: string;
@@ -56,7 +57,7 @@ const FormField: React.FC<CustomFormFieldProps> = ({
             style={{ color: "white" }}
             onPress={() => setShowPassword((prev) => !prev)}
           >
-            {showPassword ? "Hide" : "Show"}
+            {showPassword ? <Entypo name="eye" size={theme.fontSize.xl} color="white"/> : <Entypo name="eye-with-line" size={theme.fontSize.xl} color="white" />}
           </Text>
         )}
       </View>
@@ -68,7 +69,7 @@ export default FormField;
 
 const styles = StyleSheet.create({
   container: {
-    gap: 5,
+    gap: 2,
   },
   title: {
     fontSize: theme.fontSize.md,

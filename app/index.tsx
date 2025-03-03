@@ -46,7 +46,7 @@ export default function Layout() {
             {/* Button */}
             <CustomButton
               title="Continue with Email"
-              icon={<AntDesign name="arrowright" size={20} color="white" />}
+              icon={<AntDesign name="arrowright" size={theme.fontSize.xl} color="white" />}
               handlePress={() => router.push("/sign-in")}
               containerStyles={styles.buttonContainer}
               loadingText="Loading..."

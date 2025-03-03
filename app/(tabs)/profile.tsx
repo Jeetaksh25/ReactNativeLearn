@@ -36,7 +36,9 @@ const Profile = () => {
         const user = await account.get().catch(() => null);
         if (!user) {
           showAlert("warning", "No user is signed in");
-          router.push("/");
+          setTimeout(()=>{
+            router.push("/");
+          },1000)
           return;
         }
     
