@@ -36,10 +36,10 @@ const RootLayout = () => {
   return (
     <GlobalProvider>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
+        <Stack.Screen name="search/[query]" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
       </Stack>
     </GlobalProvider>
   );
