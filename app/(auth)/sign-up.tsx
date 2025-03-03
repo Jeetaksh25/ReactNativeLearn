@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: "100%",
     paddingHorizontal: theme.padding.lg,
-    gap: 20,
+    gap: theme.gap.lg,
     height: "100%",
     justifyContent: "center",
   },
@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   form: {
-    gap: 10,
+    gap: theme.gap.md,
     justifyContent: "center",
   },
   header: {
-    gap: 50,
+    gap: theme.gap.xl,
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: theme.gap.xl,
   },
   text2: {
     color: "white",

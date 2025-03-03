@@ -75,25 +75,21 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    gap: 20,
-
+    gap: theme.gap.lg,
   },
   logo: {
     width: 130,
     height: 84,
     resizeMode: "contain",
-    marginTop: 20,
     alignSelf: "center",
   },
   cards: {
-    width: "90%",
+    width: "100%",
     maxWidth: 380,
     height: 260,
     resizeMode: "contain",
-    marginTop: 20,
   },
   headingContainer: {
-    marginTop: 20,
     alignItems: "center",
     textAlign: "center",
   },
@@ -106,22 +102,15 @@ const styles = StyleSheet.create({
   highlightedText: {
     color: colors.orange[400],
   },
-  path: {
-    width: 80,
-    height: 15,
-    resizeMode: "contain",
-    marginTop: 5,
-  },
   subheading: {
     fontSize: theme.fontSize.lg,
     color: "white",
     textAlign: "center",
     fontFamily: "Poppins-Regular",
-    paddingHorizontal: 10,
-    marginTop: 10,
+    fontStyle: "italic",
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: colors.orange[500],
     width: "100%",
     borderRadius: theme.borderRadius.md,

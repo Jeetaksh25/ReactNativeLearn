@@ -6,12 +6,15 @@ import CustomButton from '../../comps/CustomButton';
 import { account } from '../../lib/appwrite';
 import { router } from 'expo-router';
 import { useRouter } from 'expo-router';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const Profile = () => {
 
   const router = useRouter();
 
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const { isLoggedIn, setIsLoggedIn, setUser } = useGlobalContext();
 
   const [alert, setAlert] = useState<{
       type: "error" | "success" | "muted" | "warning" | "info";
@@ -36,17 +39,19 @@ const Profile = () => {
         const user = await account.get().catch(() => null);
         if (!user) {
           showAlert("warning", "No user is signed in");
+          setIsLoggedIn(false);
           setTimeout(()=>{
-            router.push("/");
+            router.replace("/");
           },1000)
           return;
         }
     
         await signOut();
         showAlert("success", "Signed out successfully");
-
+        setIsLoggedIn(false);
+        setUser(null);
         setTimeout(()=>{
-          router.push("/");
+          router.replace("/");
         },1000)
 
       } catch (error) {

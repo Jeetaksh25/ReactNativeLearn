@@ -10,12 +10,15 @@ import AlertBox from "../../comps/AlertBox";
 import { signIn } from "../../lib/appwrite";
 import { router } from "expo-router";
 import { theme } from "../../theme/theme";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  const {isLoggedIn, setIsLoggedIn} = useGlobalContext();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -40,6 +43,10 @@ const SignIn = () => {
       return;
     }
     try {
+      if(isLoggedIn){
+        router.push("/home");
+      }
+
       setIsLoggingIn(true);
       const result = await signIn(form.email, form.password);
 
@@ -47,7 +54,8 @@ const SignIn = () => {
         showAlert("error", "Account not found");
         throw new Error("Account not found");
       }
-
+      
+      setIsLoggedIn(true);
       showAlert("success", "Logged in successfully");
 
       setTimeout(()=>{
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: "100%",
     paddingHorizontal: theme.fontSize.lg,
-    gap: 20,
+    gap: theme.gap.lg,
     height: "100%",
     justifyContent: "center",
   },
@@ -164,13 +172,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   form: {
-    gap: 10,
+    gap: theme.gap.md,
     justifyContent: "center",
   },
   header: {
-    gap: 50,
+    gap: theme.gap.xl,
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: theme.gap.xl,
   },
   text2: {
     color: "white",

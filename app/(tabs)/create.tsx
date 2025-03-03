@@ -1,5 +1,7 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { router } from 'expo-router';
 
 const Create = () => {
   return (

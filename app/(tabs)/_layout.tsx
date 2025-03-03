@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, Redirect, Stack } from "expo-router";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
-
 const TabsLayout = () => {
+
   return (
     <>
       <Stack.Screen name="tabs" options={{ headerShown: false }} />
