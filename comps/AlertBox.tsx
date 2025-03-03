@@ -45,7 +45,7 @@ const AlertBox: React.FC<AlertProps> = ({ actionText = "info", desc }) => {
         maxWidth: "90%",
       }}
     >
-      <AntDesign name={iconMap[actionText]} size={theme.fontSize.lg} color="white" style={{paddingLeft:theme.padding.sm}} />
+      <AntDesign name={iconMap[actionText]} size={theme.fontSize.lg} color="white" />
       <Text style={{ color: "white", fontSize: theme.fontSize.sm,padding:0,margin:0}}>{desc}</Text>
     </View>
   );

@@ -7,7 +7,7 @@ const TabsLayout = () => {
 
   return (
     <>
-      <Stack.Screen name="tabs" options={{ headerShown: false }} />
+      <Stack.Screen name="tabs" options={{ animation: "fade",headerShown: false,statusBarStyle: "dark"}} />
       <Tabs
         screenOptions={{
           tabBarShowLabel: true,
@@ -16,7 +16,7 @@ const TabsLayout = () => {
           tabBarStyle: {
             backgroundColor: "#161622",
             height: 60,
-            paddingTop: 5,
+            paddingTop: 2,
           },
         }}
       >
