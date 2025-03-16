@@ -23,17 +23,17 @@ import { getLatestPosts } from "../../lib/appwrite";
 import VideoCard from "../../comps/VideoCard";
 
 const Home = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [latestPosts, setLatestPosts] = useState([]);
+  const [latestPosts, setLatestPosts] = useState<any>([]);
+
+  const { user } = useGlobalContext();
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const response = await getAllPosts();
-      const latestResponse = await getLatestPosts();
       setData(response);
-      setLatestPosts(latestResponse);
     } catch (error) {
       showAlert("error", "Something went wrong");
     } finally {
@@ -43,6 +43,22 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  const fetchData2 = async () => {
+    setIsLoading(true);
+    try {
+      const response2 = await getLatestPosts();
+      setLatestPosts(response2);
+    } catch (error) {
+      showAlert("error", "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData2();
   }, []);
 
   console.log(data);
@@ -67,29 +83,32 @@ const Home = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     fetchData();
+    fetchData2();
     setRefreshing(false);
   };
 
   return (
     <SafeAreaView
-      style={{ backgroundColor: colors.gray[900],width: "100%", height: "100%"}}
+      style={{
+        backgroundColor: colors.gray[900],
+        width: "100%",
+        height: "100%",
+      }}
       className="min-h-screen max-w-screen-full align-items-center"
     >
       <FlatList
         data={data}
         keyExtractor={(item) => item.$id}
-        style={{gap: 10}}
-        renderItem={({ item }) => (
-          <VideoCard video={item}/>
-        )}
+        style={{ gap: 10 }}
+        renderItem={({ item }) => <VideoCard video={item} />}
         ListHeaderComponent={() => (
-          <View className="my-6 px-4 space-y-6">
+          <View className="my-6 px-4 space-y-" style={{gap:10}}>
             <View className="justify-between items-start flex-row mb-6">
               <View>
                 <Text className="text-sm text-gray-100">Welcome Back</Text>
 
                 <Text className="text-2xl font-semibold text-white">
-                  User Name
+                  {user?.username || "Guest"}
                 </Text>
               </View>
               <View className="mt-1.5">
@@ -105,10 +124,9 @@ const Home = () => {
               value={""}
               handleChangeText={(e) => console.log(e)}
             />
-            <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-gray-100 text-lg mb-3">Latest Videos</Text>
-
-              <Trending posts={latestPosts ?? []} />
+            <View style={{ gap: 10, width: "100%", alignItems: "center" }}>
+              <Trending posts={latestPosts.length > 0 ? latestPosts : []} />
+              <Text style={{ color: "white" }}>Latest Videos</Text>
             </View>
           </View>
         )}

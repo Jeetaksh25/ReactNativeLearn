@@ -1,10 +1,11 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { theme } from '../theme/theme';
-import colors from 'tailwindcss/colors';
-import { icons } from '../constants';
-import {Entypo} from '@expo/vector-icons';
-import { PlayIcon } from '@/components/ui/icon';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { theme } from "../theme/theme";
+import colors from "tailwindcss/colors";
+import { icons } from "../constants";
+import { Entypo } from "@expo/vector-icons";
+import { PlayIcon } from "@/components/ui/icon";
+import { Video, ResizeMode } from "expo-av";
 
 interface Params {
   video: {
@@ -15,35 +16,72 @@ interface Params {
   };
 }
 
-const VideoCard: React.FC<Params> = ({ video: { title, thumbnail, creator: { username, avatar } } }) => {
-
-    const [playing,setPlaying] = useState(false);
+const VideoCard: React.FC<Params> = ({
+  video: {
+    title,
+    thumbnail,
+    video,
+    creator: { username, avatar },
+  },
+}) => {
+  const [playing, setPlaying] = useState(false);
 
   return (
     <View style={styles.CardC}>
       <View style={styles.cardRow}>
         <View style={styles.avatarContainer}>
-          <Image 
-            source={{ uri: avatar }} 
-            style={styles.avatar} 
+          <Image
+            source={{ uri: avatar }}
+            style={styles.avatar}
             resizeMode="cover"
           />
         </View>
 
         <View style={styles.textContainer}>
-          <Text style={styles.title} numberOfLines={1}>{title}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
+          </Text>
           <Text style={styles.username}>@{username}</Text>
         </View>
-            <Entypo name='dots-three-vertical' style={{color: 'white'}} size={20}/>
+        <Entypo
+          name="dots-three-vertical"
+          style={{ color: "white" }}
+          size={20}
+        />
       </View>
-    {playing ? (
-        <Text style={{color: 'white'}}>Playing</Text>
-    ):(
-        <TouchableOpacity style={styles.thumbnailContainer} activeOpacity={0.7} onPress={()=>setPlaying(true)}>
-            <Image source={{uri: thumbnail}} style={styles.thumbnail} resizeMode='cover'/>
-            <Image source={icons.play} style={styles.playIcon}/>
+      {playing ? (
+        <Video
+          source={{ uri: "https://www.w3schools.com/html/mov_bbb.mp4" }}
+          style={{
+            width: "100%",
+            height: 200,
+            borderRadius: theme.borderRadius.md,
+            backgroundColor: "black",
+            marginTop: 5,
+          }}
+          resizeMode={ResizeMode.CONTAIN}
+          useNativeControls
+          shouldPlay
+          onPlaybackStatusUpdate={(status) => {
+            if (status && status.isLoaded && status.didJustFinish) {
+              setPlaying(false);
+            }
+          }}
+        />
+      ) : (
+        <TouchableOpacity
+          style={styles.thumbnailContainer}
+          activeOpacity={0.7}
+          onPress={() => setPlaying(true)}
+        >
+          <Image
+            source={{ uri: thumbnail }}
+            style={styles.thumbnail}
+            resizeMode="cover"
+          />
+          <Image source={icons.play} style={styles.playIcon} />
         </TouchableOpacity>
-    )}
+      )}
     </View>
   );
 };
@@ -74,7 +112,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   textContainer: {
-    flex: 1, 
+    flex: 1,
   },
   title: {
     color: "white",
@@ -107,7 +145,7 @@ const styles = StyleSheet.create({
     top: "50%",
     left: "50%",
     transform: [{ translateX: -25 }, { translateY: -25 }],
-  }
+  },
 });
 
 export default VideoCard;
