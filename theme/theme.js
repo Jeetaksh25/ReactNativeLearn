@@ -19,6 +19,15 @@ export const theme = {
       xl: 24,
       "2xl": 32,
     },
+  
+    margin: {
+      xs: 4,
+      sm: 8,
+      md: 12,
+      lg: 16, // Default container margin
+      xl: 24,
+      "2xl": 32,
+    },
 
     gap: {
       xs: 4,
