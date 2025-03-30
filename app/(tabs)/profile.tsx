@@ -1,75 +1,115 @@
-import { View, Text, Button } from 'react-native'
-import React, { useState } from 'react'
-import { signOut } from '../../lib/appwrite';
-import AlertBox from '../../comps/AlertBox';
-import CustomButton from '../../comps/CustomButton';
-import { account } from '../../lib/appwrite';
-import { router } from 'expo-router';
-import { useRouter } from 'expo-router';
-import { useGlobalContext } from '../../context/GlobalProvider';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  RefreshControl,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { router, useLocalSearchParams } from "expo-router";
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme/theme";
+import colors from "tailwindcss/colors";
+import { images } from "../../constants";
+import SearchInput from "../../comps/SearchInput";
+import Trending from "../../comps/Trending";
+import EmptyState from "../../comps/EmptyState";
+import AlertBox from "../../comps/AlertBox";
+import { getAllPosts, searchPosts, userPosts } from "../../lib/appwrite";
+import { getLatestPosts } from "../../lib/appwrite";
+import VideoCard from "../../comps/VideoCard";
 
 const Profile = () => {
+  const { user, setUser, setIsloggedIn } = useGlobalContext();
+  const [data, setData] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const router = useRouter();
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userPosts(user.$id);
+      setData(response);
+    } catch (error) {
+      showAlert("error", "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const [isSigningOut, setIsSigningOut] = useState(false);
+  console.log(data);
 
-  const { isLoggedIn, setIsLoggedIn, setUser } = useGlobalContext();
+  console.log(data);
 
   const [alert, setAlert] = useState<{
-      type: "error" | "success" | "muted" | "warning" | "info";
-      message: string;
-    } | null>(null);
-  
-    const showAlert = (
-      type: "error" | "success" | "muted" | "warning" | "info",
-      message: string
-    ) => {
-      setAlert({ type, message });
-  
-      setTimeout(() => {
-        setAlert(null);
-      }, 3000);
-    };
+    type: "error" | "success" | "muted" | "warning" | "info";
+    message: string;
+  } | null>(null);
 
-    const handleSignOut = async () => {
-      try {
-        setIsSigningOut(true);
-    
-        const user = await account.get().catch(() => null);
-        if (!user) {
-          showAlert("warning", "No user is signed in");
-          setIsLoggedIn(false);
-          setTimeout(()=>{
-            router.replace("/");
-          },1000)
-          return;
-        }
-    
-        await signOut();
-        showAlert("success", "Signed out successfully");
-        setIsLoggedIn(false);
-        setUser(null);
-        setTimeout(()=>{
-          router.replace("/");
-        },1000)
+  const showAlert = (
+    type: "error" | "success" | "muted" | "warning" | "info",
+    message: string
+  ) => {
+    setAlert({ type, message });
 
-      } catch (error) {
-        console.log(error);
-        showAlert("error", "Something went wrong while signing out");
-      } finally {
-        setIsSigningOut(false);
-      }
-    };
-    
+    setTimeout(() => {
+      setAlert(null);
+    }, 3000);
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    fetchData();
+    setRefreshing(false);
+  };
 
   return (
-    <View>
-      <Text>Profile</Text>
-      <CustomButton title="Sign Out" loadingText='Signing Out...' isLoading={isSigningOut} handlePress={handleSignOut}></CustomButton>
+    <SafeAreaView
+      style={{
+        backgroundColor: colors.gray[900],
+        width: "100%",
+        height: "100%",
+      }}
+      className="min-h-screen max-w-screen-full align-items-center"
+    >
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.$id}
+        style={{ gap: 10 }}
+        renderItem={({ item }) => <VideoCard video={item} />}
+        ListHeaderComponent={() => (
+          <View className="my-6 px-4 space-y-" style={{ gap: 10 }}>
+            <View className="justify-between items-start flex-row mb-6">
+              <View></View>
+              <View className="mt-1.5">
+                <TouchableOpacity onPress={() => router.push("/")}>
+                  <Image
+                    source={images.logoSmall}
+                    className="w-9 h-10"
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Videos Found"
+            subtitle="Create your first video"
+          />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{ paddingBottom: 60 }}
+      />
       {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
-    </View>
-  )
-}
+    </SafeAreaView>
+  );
+};
 
-export default Profile
+export default Profile;
