@@ -34,7 +34,7 @@ const TrendingItem: React.FC<TrendingItemProps> = ({ isActive, item }) => {
   return (
     <Animatable.View animation={isActive ? zoomIn : zoomOut} duration={500}>
       {playing ? (
-        <Video source={{uri:"https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"}} style={{width: 150, height: 250, borderRadius: theme.borderRadius.xl,backgroundColor: "black", marginTop: 5}} resizeMode={ResizeMode.CONTAIN} useNativeControls shouldPlay onPlaybackStatusUpdate={(status) => {
+        <Video source={{uri: item.video}} style={{width: 150, height: 250, borderRadius: theme.borderRadius.xl,backgroundColor: "black", marginTop: 5}} resizeMode={ResizeMode.CONTAIN} useNativeControls shouldPlay onPlaybackStatusUpdate={(status) => {
           if (status && status.isLoaded && status.didJustFinish) {
             setPlaying(false);
           }

@@ -193,15 +193,6 @@ const Profile = () => {
                   fontSize: theme.fontSize["2xl"],
                 }}
               />
-
-              <InfoBox
-                title="1.2k"
-                subtitle="Followers"
-                titleStyles={{
-                  color: "white",
-                  fontSize: theme.fontSize["2xl"],
-                }}
-              />
             </View>
           </View>
         )}
