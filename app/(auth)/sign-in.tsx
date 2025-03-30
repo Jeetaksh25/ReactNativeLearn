@@ -18,7 +18,7 @@ const SignIn = () => {
     password: "",
   });
 
-  const {isLoggedIn, setIsLoggedIn} = useGlobalContext();
+  const {setUser,isLoggedIn, setIsLoggedIn} = useGlobalContext();
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -55,7 +55,9 @@ const SignIn = () => {
         throw new Error("Account not found");
       }
       
+      setUser(result);
       setIsLoggedIn(true);
+
       showAlert("success", "Logged in successfully");
 
       setTimeout(()=>{

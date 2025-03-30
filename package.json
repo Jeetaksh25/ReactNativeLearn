@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@ant-design/icons-react-native": "^2.3.2",
-    "@expo/html-elements": "^0.4.2",
+    "@expo/html-elements": "^0.4.3",
     "@expo/vector-icons": "^14.0.2",
     "@gluestack-ui/accordion": "^1.0.12",
     "@gluestack-ui/actionsheet": "^0.2.50",
@@ -63,6 +63,7 @@
     "expo-haptics": "~14.0.1",
     "expo-linking": "~7.0.5",
     "expo-router": "~4.0.17",
+    "expo-screen-orientation": "~8.0.4",
     "expo-splash-screen": "~0.29.22",
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",
@@ -87,8 +88,7 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-    "tailwindcss": "^3.4.17",
-    "expo-screen-orientation": "~8.0.4"
+    "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

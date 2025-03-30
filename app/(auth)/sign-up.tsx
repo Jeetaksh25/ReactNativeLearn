@@ -9,6 +9,7 @@ import { Link, useRouter } from "expo-router";
 import { createUser } from "../../lib/appwrite";
 import AlertBox from "../../comps/AlertBox";
 import {theme} from "../../theme/theme"
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -16,6 +17,8 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+
+  const {setUser, setIsLoggedIn} = useGlobalContext();
 
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [alert, setAlert] = useState<{ type: "error" | "success" | "muted" | "warning" | "info"; message: string } | null>(null);
@@ -47,6 +50,8 @@ const SignUp = () => {
         throw new Error("Account not created");
       }
 
+      setUser(result);
+      setIsLoggedIn(true);
       showAlert("success", "Account created successfully");
 
       setTimeout(()=>{
