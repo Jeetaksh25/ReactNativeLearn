@@ -143,7 +143,11 @@ const Home = () => {
         }
         contentContainerStyle={{ paddingBottom: 60 }}
       />
-      {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
+      <View style={{ position: "absolute", bottom: 70, width: "100%", alignItems: "center" }}>
+      {alert && (
+                <AlertBox actionText={alert.type} desc={alert.message} />
+              )}
+      </View>
     </SafeAreaView>
   );
 };

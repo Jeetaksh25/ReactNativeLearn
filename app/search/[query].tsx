@@ -22,9 +22,8 @@ import { getAllPosts, searchPosts } from "../../lib/appwrite";
 import { getLatestPosts } from "../../lib/appwrite";
 import VideoCard from "../../comps/VideoCard";
 
-
 const Search = () => {
-  const {query} = useLocalSearchParams();
+  const { query } = useLocalSearchParams();
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,8 +47,6 @@ const Search = () => {
   useEffect(() => {
     fetchData();
   }, [query]);
-
-
 
   console.log(data);
 
@@ -91,12 +88,17 @@ const Search = () => {
         style={{ gap: 10 }}
         renderItem={({ item }) => <VideoCard video={item} />}
         ListHeaderComponent={() => (
-          <View className="my-6 px-4 space-y-" style={{gap:10}}>
+          <View className="my-6 px-4 space-y-" style={{ gap: 10 }}>
             <View className="justify-between items-start flex-row mb-6">
               <View>
                 <Text className="text-sm text-gray-100">Seach Results</Text>
 
-                <Text className="text-2xl font-bold text-gray-100" style={{fontSize:theme.fontSize.xl}}>{query}</Text>
+                <Text
+                  className="text-2xl font-bold text-gray-100"
+                  style={{ fontSize: theme.fontSize.xl }}
+                >
+                  {query}
+                </Text>
               </View>
               <View className="mt-1.5">
                 <TouchableOpacity onPress={() => router.push("/")}>
@@ -127,7 +129,16 @@ const Search = () => {
         }
         contentContainerStyle={{ paddingBottom: 60 }}
       />
-      {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
+      <View
+        style={{
+          position: "absolute",
+          bottom: 70,
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
+        {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
+      </View>
     </SafeAreaView>
   );
 };

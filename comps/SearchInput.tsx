@@ -45,6 +45,7 @@ const SearchInput: React.FC<CustomSearchInputProps> = ({
 }) => {
   const pathname = usePathname();
   const [query, setQuery] = useState(initialQuery || "");
+
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";
     message: string;
@@ -95,6 +96,11 @@ const SearchInput: React.FC<CustomSearchInputProps> = ({
       >
         <Image source={icons.search} className="w-h h-5" resizeMode="contain" />
       </TouchableOpacity>
+      <View style={{ position: "absolute", bottom: 70, width: "100%", alignItems: "center" }}>
+      {alert && (
+                <AlertBox actionText={alert.type} desc={alert.message} />
+              )}
+      </View>
     </View>
   );
 };
