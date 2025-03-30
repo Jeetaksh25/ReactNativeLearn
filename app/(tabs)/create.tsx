@@ -7,7 +7,7 @@ import { gray } from 'tailwindcss/colors';
 
 const Create = () => {
   return (
-    <SafeAreaView style={{flex: 1,alignItems:"center",backgroundColor: gray[900]   }}>
+    <SafeAreaView style={{flex: 1,alignItems:"center",backgroundColor: gray[900]}}>
       <ScrollView style={{paddingHorizontal:6,}}>
 
       </ScrollView>
