@@ -33,7 +33,6 @@ const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [signingOut, setSigningOut] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   const fetchData = async () => {
@@ -48,10 +47,11 @@ const Profile = () => {
     }
   };
 
-  console.log(data);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  console.log(data);
-
+  
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";
     message: string;
@@ -142,10 +142,11 @@ const Profile = () => {
                 </TouchableOpacity>
               </View>
             </View>
+
             <View
               style={{
-                width: 60,
-                height: 60,
+                width: 50,
+                height: 50,
                 borderRadius: 30 / 2,
                 borderWidth: 2,
                 borderColor: colors.orange[500],
@@ -163,17 +164,17 @@ const Profile = () => {
             </View>
             <View
               style={{
-                flexDirection: "row",
+                flexDirection: "column",
                 alignContent: "center",
-                justifyContent: "space-evenly",
+                justifyContent: "center",
               }}
             >
+              
               <InfoBox
                 title={user?.username}
-                containerStyles={{ marginTop: 20 }}
                 titleStyles={{
                   color: "white",
-                  fontSize: theme.fontSize["3xl"],
+                  fontSize: theme.fontSize["2xl"],
                 }}
               />
             </View>
@@ -186,7 +187,7 @@ const Profile = () => {
               }}
             >
               <InfoBox
-                title={data.posts?.length || 0}
+                title={data?.length.toString() || 0}
                 subtitle="Posts"
                 titleStyles={{
                   color: "white",
