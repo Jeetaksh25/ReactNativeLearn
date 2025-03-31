@@ -1,7 +1,14 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import React, { useState } from "react";
 import { theme } from "../theme/theme";
-import colors from "tailwindcss/colors";
+import colors, { gray } from "tailwindcss/colors";
 import { icons } from "../constants";
 import { Entypo } from "@expo/vector-icons";
 import { PlayIcon } from "@/components/ui/icon";
@@ -25,6 +32,19 @@ const VideoCard: React.FC<Params> = ({
   },
 }) => {
   const [playing, setPlaying] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  const handleDownload = () => {
+      handleMenu();
+  };
+
+  const handleBookmark = () => {
+    handleMenu();
+  };
 
   return (
     <View style={styles.CardC}>
@@ -43,31 +63,46 @@ const VideoCard: React.FC<Params> = ({
           </Text>
           <Text style={styles.username}>@{username}</Text>
         </View>
-        <Entypo
-          name="dots-three-vertical"
-          style={{ color: "white" }}
-          size={20}
-        />
+        <TouchableOpacity onPress={handleMenu}>
+          <Entypo
+            name="dots-three-vertical"
+            style={{ color: "white",paddingRight:2 }}
+            size={20}
+          />
+        </TouchableOpacity>
       </View>
+      {menuOpen && (
+        <View style={styles.menuContainer}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleDownload}
+          >
+            <Text style={styles.menuText}>Download</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleBookmark}
+          >
+            <Text style={styles.menuText}>Bookmark</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {playing ? (
-        <Video
-          source={{ uri: video }}
-          style={{
-            width: "100%",
-            height: 200,
-            borderRadius: theme.borderRadius.md,
-            backgroundColor: "black",
-            marginTop: 5,
-          }}
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status && status.isLoaded && status.didJustFinish) {
-              setPlaying(false);
-            }
-          }}
-        />
+        <View>
+          <Video
+            source={{ uri: video }}
+            style={styles.videoPlayer}
+            resizeMode={ResizeMode.CONTAIN}
+            useNativeControls
+            shouldPlay
+            onPlaybackStatusUpdate={(status) => {
+              if (status && status.isLoaded && status.didJustFinish) {
+                setPlaying(false);
+              }
+            }}
+          />
+        </View>
       ) : (
         <TouchableOpacity
           style={styles.thumbnailContainer}
@@ -145,6 +180,40 @@ const styles = StyleSheet.create({
     top: "50%",
     left: "50%",
     transform: [{ translateX: -25 }, { translateY: -25 }],
+  },
+  videoPlayer: {
+    width: "100%",
+    height: 200,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: "black",
+    marginTop: 5,
+  },
+  menuContainer: {
+    position: "absolute",
+    top: 45,
+    right: 30,
+    backgroundColor: gray[700],
+    padding: 8,
+    borderRadius: 5,
+    shadowColor: "black",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 999,
+    gap: 5,
+  },
+  menuItem: {
+    color: "white",
+    fontSize: theme.fontSize.sm,
+    backgroundColor: gray[900],
+    paddingVertical: 2,
+    paddingHorizontal: 3,
+    borderRadius: 3,
+  },
+  menuText: {
+    color: "white",
+    fontSize: theme.fontSize.sm,
   },
 });
 
