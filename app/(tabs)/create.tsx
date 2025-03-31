@@ -9,6 +9,7 @@ import { icons, images } from "@/constants";
 import colors from "tailwindcss/colors";
 import CustomButton from "@/comps/CustomButton";
 import * as DocumentPicker from "expo-document-picker";
+import AlertBox from "@/comps/AlertBox";
 
 const Create = () => {
   const [uploading, setUploading] = useState(false);
@@ -19,6 +20,22 @@ const Create = () => {
     thumbnail: "",
     prompt: "",
   });
+
+    const [alert, setAlert] = useState<{
+      type: "error" | "success" | "muted" | "warning" | "info";
+      message: string;
+    } | null>(null);
+  
+    const showAlert = (
+      type: "error" | "success" | "muted" | "warning" | "info",
+      message: string
+    ) => {
+      setAlert({ type, message });
+  
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
+    };
 
   const openPicker = async (selectType: "image" | "video") => {
     const result = await DocumentPicker.getDocumentAsync({
@@ -37,12 +54,14 @@ const Create = () => {
         setForm({...form, video: result.assets[0].uri});
       }
     }
-    setTimeout(()=>{
-      Alert.alert("Document Picked",JSON.stringify(result,null,2))
-    },100)
   };
 
-  const submit = async () => {};
+  const submit = async () => {
+    if(!form.title || !form.video || !form.thumbnail || !form.prompt){
+      showAlert("error", "Please fill in all the fields");
+      return;
+    }
+  };
 
   return (
     <SafeAreaView
@@ -59,7 +78,8 @@ const Create = () => {
           justifyContent: "center",
           alignItems: "center",
           paddingHorizontal: theme.padding.lg,
-          gap: theme.gap.lg,
+          gap: theme.gap.md,
+          paddingVertical: theme.padding.xl,
         }}
         style={{ width: "100%" }}
       >
@@ -67,7 +87,6 @@ const Create = () => {
           style={{
             color: "white",
             fontSize: theme.fontSize["2xl"],
-            marginBottom: 20,
             fontWeight: "bold",
           }}
         >
@@ -78,7 +97,7 @@ const Create = () => {
           style={{
             width: "100%",
             maxWidth: 400,
-            gap: theme.gap.xl,
+            gap: theme.gap.lg,
             marginBottom: 20,
           }}
         >
@@ -194,15 +213,17 @@ const Create = () => {
             title="AI Prompt"
             value={form.prompt}
             handleChangeText={(e) => setForm({ ...form, prompt: e })}
-            placeholder="The Prompt you used to create the video"
+            placeholder="Prompt Used"
           />
-        </View>
-
-        <CustomButton
+                  <CustomButton
           title="Submit & Publish"
           isLoading={uploading}
           handlePress={submit}
         />
+        </View>
+
+
+        {alert && <AlertBox actionText={alert.type} desc={alert.message}/> }
       </ScrollView>
     </SafeAreaView>
   );
