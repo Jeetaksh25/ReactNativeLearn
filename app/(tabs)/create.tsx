@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  RefreshControl
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -127,6 +128,19 @@ const Create = () => {
     }
   };
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+      setRefreshing(true);
+      setForm({
+        title: "",
+        video: { uri: "", name: "", type: "", size: 0 },
+        thumbnail: { uri: "", name: "", type: "", size: 0 },
+        prompt: "",
+      });
+      setRefreshing(false);
+    }
+
   return (
     <SafeAreaView
       style={{
@@ -146,6 +160,8 @@ const Create = () => {
           paddingVertical: theme.padding.xl,
         }}
         style={{ width: "100%" }}
+
+        refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <Text
           style={{
