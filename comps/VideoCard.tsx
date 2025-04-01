@@ -46,11 +46,6 @@ const VideoCard: React.FC<Params> = ({
   const videoUrl = video;
   const videoId2 = videoUrl.match(/files\/([^/]+)\/view/)?.[1] as string;
 
-  console.log(videoId2); 
-  console.log(videoId2);
-  console.log(videoId2);
-  console.log(videoId2);
-
   const handleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
@@ -61,13 +56,9 @@ const VideoCard: React.FC<Params> = ({
 
   const handleDownload = async (videoId2: string) => {
 
-    console.log("VideoId:", videoId2);
-
     try {
       setDownloading(true);
       const fileUrl = await downloadVideo(videoId2);
-
-      console.log("fileURL: ",fileUrl)
 
       const fileName = `video_${videoId2}.mp4`;
 
@@ -77,9 +68,6 @@ const VideoCard: React.FC<Params> = ({
         fileUrl.toString(),
         fileUri
       );
-
-      console.log("Download result:", downloadResult);
-
       save(downloadResult.uri)
 
     } catch (error) {
@@ -139,7 +127,7 @@ const VideoCard: React.FC<Params> = ({
             <Text style={styles.menuText}>Bookmark</Text>
           </TouchableOpacity>
           {$id === user.$id && (
-            <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
+            <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
               <Text style={styles.menuText}>Delete</Text>
             </TouchableOpacity>
           )}
