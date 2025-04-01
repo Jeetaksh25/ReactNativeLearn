@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { black, gray } from "tailwindcss/colors";
@@ -10,56 +17,107 @@ import colors from "tailwindcss/colors";
 import CustomButton from "@/comps/CustomButton";
 import * as DocumentPicker from "expo-document-picker";
 import AlertBox from "@/comps/AlertBox";
+import {router} from "expo-router"
+import { createVideo } from "../../lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import * as ImagePicker from "expo-image-picker";
 
 const Create = () => {
   const [uploading, setUploading] = useState(false);
 
+  const {user} = useGlobalContext();
+
   const [form, setForm] = useState({
     title: "",
-    video: "",
-    thumbnail: "",
+    video: {
+      uri: "",
+      name: "",
+      type: "",
+      size: 0
+    },
+    thumbnail: {
+      uri: "",
+      name: "",
+      type: "",
+      size: 0
+    },
     prompt: "",
   });
 
-    const [alert, setAlert] = useState<{
-      type: "error" | "success" | "muted" | "warning" | "info";
-      message: string;
-    } | null>(null);
-  
-    const showAlert = (
-      type: "error" | "success" | "muted" | "warning" | "info",
-      message: string
-    ) => {
-      setAlert({ type, message });
-  
-      setTimeout(() => {
-        setAlert(null);
-      }, 3000);
-    };
+  const [alert, setAlert] = useState<{
+    type: "error" | "success" | "muted" | "warning" | "info";
+    message: string;
+  } | null>(null);
+
+  const showAlert = (
+    type: "error" | "success" | "muted" | "warning" | "info",
+    message: string
+  ) => {
+    setAlert({ type, message });
+
+    setTimeout(() => {
+      setAlert(null);
+    }, 3000);
+  };
 
   const openPicker = async (selectType: "image" | "video") => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type:
-        selectType === "image"
-          ? ["image/png", "image/jpg", "image/jpeg"]
-          : ["video/mp4", "video/gif"],
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images', 'videos'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
 
-    if(!result.canceled){
-      if(selectType === "image"){
-        setForm({...form, thumbnail: result.assets[0].uri});
-      }
+    console.log("Picked File:", result);
+  
+    if (!result.canceled && result.assets?.length > 0) {
+      const pickedFile = result.assets[0];
 
-      if(selectType === "video"){
-        setForm({...form, video: result.assets[0].uri});
-      }
+      const fileData = {
+        uri: pickedFile.uri,
+        name: pickedFile.fileName || "unknown",  // Fallback if fileName doesn't exist
+        type: pickedFile.mimeType || "unknown",  // Fallback if mimeType doesn't exist
+        size: pickedFile.fileSize || 0,         // Fallback if fileSize doesn't exist
+      };
+
+    if (selectType === "image") {
+      setForm({
+        ...form,
+        thumbnail: fileData,
+      });
+      console.log("Selected Image:", fileData);
+    }
+
+    if (selectType === "video") {
+      setForm({
+        ...form,
+        video: fileData,
+      });
+      console.log("Selected Video:", fileData);
+    }
     }
   };
 
   const submit = async () => {
-    if(!form.title || !form.video || !form.thumbnail || !form.prompt){
+    if (!form.title || !form.video || !form.thumbnail || !form.prompt) {
       showAlert("error", "Please fill in all the fields");
       return;
+    }
+    try {
+      setUploading(true);
+      
+      await createVideo({
+        ...form, userId: user.$id
+      });
+      showAlert("success","Post uploaded successfully");
+      
+      router.push("/home");
+    } catch (error) {
+      console.log(error);
+      showAlert("error", "Something went wrong");
+    } finally {
+      setUploading(false);
+      setForm({ title: "", video: { uri: "" , name: "", type: "", size: 0}, thumbnail: { uri: "" , name: "", type: "", size: 0}, prompt: "" });
     }
   };
 
@@ -120,7 +178,7 @@ const Create = () => {
             <TouchableOpacity onPress={() => openPicker("video")}>
               {form.video ? (
                 <Video
-                  source={{ uri: form.video }}
+                  source={{ uri: form.video.uri }}
                   style={{
                     width: "100%",
                     height: 200,
@@ -174,7 +232,7 @@ const Create = () => {
           <TouchableOpacity onPress={() => openPicker("image")}>
             {form.thumbnail ? (
               <Image
-                source={{ uri: form.thumbnail }}
+                source={{ uri: form.thumbnail.uri }}
                 style={{
                   width: "100%",
                   height: 200,
@@ -215,15 +273,14 @@ const Create = () => {
             handleChangeText={(e) => setForm({ ...form, prompt: e })}
             placeholder="Prompt Used"
           />
-                  <CustomButton
-          title="Submit & Publish"
-          isLoading={uploading}
-          handlePress={submit}
-        />
+          <CustomButton
+            title="Submit & Publish"
+            isLoading={uploading}
+            handlePress={submit}
+          />
         </View>
 
-
-        {alert && <AlertBox actionText={alert.type} desc={alert.message}/> }
+        {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
       </ScrollView>
     </SafeAreaView>
   );

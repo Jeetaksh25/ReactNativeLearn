@@ -36,7 +36,7 @@ const GlobalProvider = ({ children }) => {
       .finally(() => {
         setIsLoading(false);
       });
-  },[]);
+  },[isLoggedIn]);
 
   return (
     <GlobalContext.Provider
