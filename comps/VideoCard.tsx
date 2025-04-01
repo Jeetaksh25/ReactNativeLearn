@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  Platform
 } from "react-native";
 import React, { useState } from "react";
 import { theme } from "../theme/theme";
@@ -15,14 +16,17 @@ import { PlayIcon } from "@/components/ui/icon";
 import { Video, ResizeMode } from "expo-av";
 import { downloadVideo } from "@/lib/appwrite";
 import * as fD from "expo-file-system";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 
 interface Params {
   video: {
     title: string;
     thumbnail: string;
     video: string;
-    creator: { username: string; avatar: string };
-    videoId: string;
+    creator: { username: string; avatar: string; $id: string };
+    $id: string,
   };
 }
 
@@ -31,8 +35,8 @@ const VideoCard: React.FC<Params> = ({
     title,
     thumbnail,
     video,
-    creator: { username, avatar },
-    videoId,
+    creator: { username, avatar, $id },
+    $id: videoId
   },
 }) => {
   const [playing, setPlaying] = useState(false);
@@ -47,34 +51,47 @@ const VideoCard: React.FC<Params> = ({
   const handleDownload = async (videoId: string) => {
     try {
       setDownloading(true);
-  
-      // Assuming downloadVideo returns a URL object, extract the URL string
       const fileUrl = await downloadVideo({ videoId });
-  
-      // Ensure fileUrl is a string (if it's a URL object, use .toString() to extract the URL)
-      const fileUrlString = fileUrl instanceof URL ? fileUrl.toString() : fileUrl;
-  
+
+      const fileUrlString =
+        fileUrl instanceof URL ? fileUrl.toString() : fileUrl;
+
       if (!fileUrlString) {
         throw new Error("File not found");
       }
-  
+
       const fileName = `video_${videoId}.mp4`;
-  
-      // Create a download resumable object
-      const downloadResumable = fD.createDownloadResumable(
+      const tempFilePath = FileSystem.cacheDirectory + fileName;
+
+      const downloadResumable = FileSystem.createDownloadResumable(
         fileUrlString,
-        fD.documentDirectory + fileName
+        tempFilePath
       );
-  
-      // Now use downloadAsync on the downloadResumable object
+
       const downloadResult = await downloadResumable.downloadAsync();
 
-    if (downloadResult && downloadResult.uri) {
+      if (downloadResult && downloadResult.uri) {
+        console.log("Download complete:", downloadResult.uri);
+      } else {
+        throw new Error("Download failed or returned undefined result");
+      }
+
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        throw new Error('Permission to access media library denied');
+      }
+
+      const asset = await MediaLibrary.createAssetAsync(downloadResult.uri);
+      const album = await MediaLibrary.getAlbumAsync('Download');
+
+      if (album == null) {
+        await MediaLibrary.createAlbumAsync('Download', asset, false);
+      } else {
+        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+      }
+
       console.log("Download complete:", downloadResult.uri);
-    } else {
-      throw new Error("Download failed or returned undefined result");
-    }
-  
+
     } catch (error) {
       console.log("Download error:", error);
     } finally {
@@ -83,9 +100,15 @@ const VideoCard: React.FC<Params> = ({
     }
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = async () => {
     handleMenu();
   };
+  
+  const handleDelete = async () => {
+    handleMenu();
+  }
+
+  const { user } = useGlobalContext();
 
   return (
     <View style={styles.CardC}>
@@ -118,11 +141,18 @@ const VideoCard: React.FC<Params> = ({
             style={styles.menuItem}
             onPress={() => handleDownload(videoId)}
           >
-            <Text style={styles.menuText}>{downloading ? "Downloading..." : "Download"}</Text>
+            <Text style={styles.menuText}>
+              {downloading ? "Downloading..." : "Download"}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
             <Text style={styles.menuText}>Bookmark</Text>
           </TouchableOpacity>
+          {$id === user.$id && (
+            <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
+              <Text style={styles.menuText}>Delete</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
 
@@ -252,6 +282,7 @@ const styles = StyleSheet.create({
   menuText: {
     color: "white",
     fontSize: theme.fontSize.sm,
+    textAlign: "center",  
   },
 });
 
