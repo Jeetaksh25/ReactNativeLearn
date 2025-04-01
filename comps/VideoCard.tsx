@@ -19,6 +19,7 @@ import * as fD from "expo-file-system";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
+import { shareAsync } from "expo-sharing";
 
 interface Params {
   video: {
@@ -26,7 +27,6 @@ interface Params {
     thumbnail: string;
     video: string;
     creator: { username: string; avatar: string; $id: string };
-    $id: string,
   };
 }
 
@@ -36,61 +36,51 @@ const VideoCard: React.FC<Params> = ({
     thumbnail,
     video,
     creator: { username, avatar, $id },
-    $id: videoId
   },
 }) => {
   const [playing, setPlaying] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [downloading, setDownloading] = useState(false);
+  
+  const videoUrl = video;
+  const videoId2 = videoUrl.match(/files\/([^/]+)\/view/)?.[1] as string;
+
+  console.log(videoId2); 
+  console.log(videoId2);
+  console.log(videoId2);
+  console.log(videoId2);
 
   const handleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  const handleDownload = async (videoId: string) => {
+  const save = (uri: string) => {
+    shareAsync(uri);
+  }
+
+  const handleDownload = async (videoId2: string) => {
+
+    console.log("VideoId:", videoId2);
+
     try {
       setDownloading(true);
-      const fileUrl = await downloadVideo({ videoId });
+      const fileUrl = await downloadVideo(videoId2);
 
-      const fileUrlString =
-        fileUrl instanceof URL ? fileUrl.toString() : fileUrl;
+      console.log("fileURL: ",fileUrl)
 
-      if (!fileUrlString) {
-        throw new Error("File not found");
-      }
+      const fileName = `video_${videoId2}.mp4`;
 
-      const fileName = `video_${videoId}.mp4`;
-      const tempFilePath = FileSystem.cacheDirectory + fileName;
+      const fileUri = FileSystem.documentDirectory + fileName;
 
-      const downloadResumable = FileSystem.createDownloadResumable(
-        fileUrlString,
-        tempFilePath
+      const downloadResult = await FileSystem.downloadAsync(
+        fileUrl.toString(),
+        fileUri
       );
 
-      const downloadResult = await downloadResumable.downloadAsync();
+      console.log("Download result:", downloadResult);
 
-      if (downloadResult && downloadResult.uri) {
-        console.log("Download complete:", downloadResult.uri);
-      } else {
-        throw new Error("Download failed or returned undefined result");
-      }
-
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== 'granted') {
-        throw new Error('Permission to access media library denied');
-      }
-
-      const asset = await MediaLibrary.createAssetAsync(downloadResult.uri);
-      const album = await MediaLibrary.getAlbumAsync('Download');
-
-      if (album == null) {
-        await MediaLibrary.createAlbumAsync('Download', asset, false);
-      } else {
-        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-      }
-
-      console.log("Download complete:", downloadResult.uri);
+      save(downloadResult.uri)
 
     } catch (error) {
       console.log("Download error:", error);
@@ -139,7 +129,7 @@ const VideoCard: React.FC<Params> = ({
         <View style={styles.menuContainer}>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => handleDownload(videoId)}
+            onPress={() => handleDownload(videoId2)}
           >
             <Text style={styles.menuText}>
               {downloading ? "Downloading..." : "Download"}
