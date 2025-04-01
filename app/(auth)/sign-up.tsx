@@ -55,7 +55,7 @@ const SignUp = () => {
       showAlert("success", "Account created successfully");
 
       setTimeout(()=>{
-        router.push("/home");
+        router.replace("/home");
       },2000)
 
     } catch (error: any) {

@@ -44,7 +44,7 @@ const SignIn = () => {
     }
     try {
       if(isLoggedIn){
-        router.push("/home");
+        router.replace("/home");
       }
 
       setIsLoggingIn(true);
@@ -61,7 +61,7 @@ const SignIn = () => {
       showAlert("success", "Logged in successfully");
 
       setTimeout(()=>{
-        router.push("/home");
+        router.replace("/home");
       },2000)
 
     } catch (error: any) {
