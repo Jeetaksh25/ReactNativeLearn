@@ -13,6 +13,8 @@ import { icons } from "../constants";
 import { Entypo } from "@expo/vector-icons";
 import { PlayIcon } from "@/components/ui/icon";
 import { Video, ResizeMode } from "expo-av";
+import { downloadVideo } from "@/lib/appwrite";
+import * as fD from "expo-file-system";
 
 interface Params {
   video: {
@@ -20,6 +22,7 @@ interface Params {
     thumbnail: string;
     video: string;
     creator: { username: string; avatar: string };
+    videoId: string;
   };
 }
 
@@ -29,17 +32,55 @@ const VideoCard: React.FC<Params> = ({
     thumbnail,
     video,
     creator: { username, avatar },
+    videoId,
   },
 }) => {
   const [playing, setPlaying] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [downloading, setDownloading] = useState(false);
+
   const handleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  const handleDownload = () => {
-      handleMenu();
+  const handleDownload = async (videoId: string) => {
+    try {
+      setDownloading(true);
+  
+      // Assuming downloadVideo returns a URL object, extract the URL string
+      const fileUrl = await downloadVideo({ videoId });
+  
+      // Ensure fileUrl is a string (if it's a URL object, use .toString() to extract the URL)
+      const fileUrlString = fileUrl instanceof URL ? fileUrl.toString() : fileUrl;
+  
+      if (!fileUrlString) {
+        throw new Error("File not found");
+      }
+  
+      const fileName = `video_${videoId}.mp4`;
+  
+      // Create a download resumable object
+      const downloadResumable = fD.createDownloadResumable(
+        fileUrlString,
+        fD.documentDirectory + fileName
+      );
+  
+      // Now use downloadAsync on the downloadResumable object
+      const downloadResult = await downloadResumable.downloadAsync();
+
+    if (downloadResult && downloadResult.uri) {
+      console.log("Download complete:", downloadResult.uri);
+    } else {
+      throw new Error("Download failed or returned undefined result");
+    }
+  
+    } catch (error) {
+      console.log("Download error:", error);
+    } finally {
+      setDownloading(false);
+      setMenuOpen(false);
+    }
   };
 
   const handleBookmark = () => {
@@ -66,7 +107,7 @@ const VideoCard: React.FC<Params> = ({
         <TouchableOpacity onPress={handleMenu}>
           <Entypo
             name="dots-three-vertical"
-            style={{ color: "white",paddingRight:2 }}
+            style={{ color: "white", paddingRight: 2 }}
             size={20}
           />
         </TouchableOpacity>
@@ -75,14 +116,11 @@ const VideoCard: React.FC<Params> = ({
         <View style={styles.menuContainer}>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={handleDownload}
+            onPress={() => handleDownload(videoId)}
           >
-            <Text style={styles.menuText}>Download</Text>
+            <Text style={styles.menuText}>{downloading ? "Downloading..." : "Download"}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleBookmark}
-          >
+          <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
             <Text style={styles.menuText}>Bookmark</Text>
           </TouchableOpacity>
         </View>

@@ -87,6 +87,8 @@ const Home = () => {
     setRefreshing(false);
   };
 
+  
+
   return (
     <SafeAreaView
       style={{
