@@ -17,7 +17,7 @@ import colors from "tailwindcss/colors";
 import CustomButton from "@/comps/CustomButton";
 import * as DocumentPicker from "expo-document-picker";
 import AlertBox from "@/comps/AlertBox";
-import {router} from "expo-router"
+import { router } from "expo-router";
 import { createVideo } from "../../lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import * as ImagePicker from "expo-image-picker";
@@ -25,7 +25,7 @@ import * as ImagePicker from "expo-image-picker";
 const Create = () => {
   const [uploading, setUploading] = useState(false);
 
-  const {user} = useGlobalContext();
+  const { user } = useGlobalContext();
 
   const [form, setForm] = useState({
     title: "",
@@ -33,13 +33,13 @@ const Create = () => {
       uri: "",
       name: "",
       type: "",
-      size: 0
+      size: 0,
     },
     thumbnail: {
       uri: "",
       name: "",
       type: "",
-      size: 0
+      size: 0,
     },
     prompt: "",
   });
@@ -62,39 +62,39 @@ const Create = () => {
 
   const openPicker = async (selectType: "image" | "video") => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
+      mediaTypes: ["images", "videos"],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
     console.log("Picked File:", result);
-  
+
     if (!result.canceled && result.assets?.length > 0) {
       const pickedFile = result.assets[0];
 
       const fileData = {
         uri: pickedFile.uri,
-        name: pickedFile.fileName || "unknown",  // Fallback if fileName doesn't exist
-        type: pickedFile.mimeType || "unknown",  // Fallback if mimeType doesn't exist
-        size: pickedFile.fileSize || 0,         // Fallback if fileSize doesn't exist
+        name: pickedFile.fileName || "unknown", // Fallback if fileName doesn't exist
+        type: pickedFile.mimeType || "unknown", // Fallback if mimeType doesn't exist
+        size: pickedFile.fileSize || 0, // Fallback if fileSize doesn't exist
       };
 
-    if (selectType === "image") {
-      setForm({
-        ...form,
-        thumbnail: fileData,
-      });
-      console.log("Selected Image:", fileData);
-    }
+      if (selectType === "image") {
+        setForm({
+          ...form,
+          thumbnail: fileData,
+        });
+        console.log("Selected Image:", fileData);
+      }
 
-    if (selectType === "video") {
-      setForm({
-        ...form,
-        video: fileData,
-      });
-      console.log("Selected Video:", fileData);
-    }
+      if (selectType === "video") {
+        setForm({
+          ...form,
+          video: fileData,
+        });
+        console.log("Selected Video:", fileData);
+      }
     }
   };
 
@@ -105,19 +105,25 @@ const Create = () => {
     }
     try {
       setUploading(true);
-      
+
       await createVideo({
-        ...form, userId: user.$id
+        ...form,
+        userId: user.$id,
       });
-      showAlert("success","Post uploaded successfully");
-      
+      showAlert("success", "Post uploaded successfully");
+
       router.push("/home");
     } catch (error) {
       console.log(error);
       showAlert("error", "Something went wrong");
     } finally {
       setUploading(false);
-      setForm({ title: "", video: { uri: "" , name: "", type: "", size: 0}, thumbnail: { uri: "" , name: "", type: "", size: 0}, prompt: "" });
+      setForm({
+        title: "",
+        video: { uri: "", name: "", type: "", size: 0 },
+        thumbnail: { uri: "", name: "", type: "", size: 0 },
+        prompt: "",
+      });
     }
   };
 
@@ -146,6 +152,7 @@ const Create = () => {
             color: "white",
             fontSize: theme.fontSize["2xl"],
             fontWeight: "bold",
+            marginBottom: 10,
           }}
         >
           Upload Video
@@ -155,7 +162,7 @@ const Create = () => {
           style={{
             width: "100%",
             maxWidth: 400,
-            gap: theme.gap.lg,
+            gap: theme.gap.md,
             marginBottom: 20,
           }}
         >
@@ -279,8 +286,16 @@ const Create = () => {
             handlePress={submit}
           />
         </View>
-
-        {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
+        <View
+          style={{
+            position: "absolute",
+            bottom: 70,
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          {alert && <AlertBox actionText={alert.type} desc={alert.message} />}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
