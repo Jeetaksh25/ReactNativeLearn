@@ -176,7 +176,7 @@ const Create = () => {
           </Text>
           <View>
             <TouchableOpacity onPress={() => openPicker("video")}>
-              {form.video ? (
+              {form.video.uri ? (
                 <Video
                   source={{ uri: form.video.uri }}
                   style={{
@@ -230,7 +230,7 @@ const Create = () => {
             Upload Thumbnail
           </Text>
           <TouchableOpacity onPress={() => openPicker("image")}>
-            {form.thumbnail ? (
+            {form.thumbnail.uri ? (
               <Image
                 source={{ uri: form.thumbnail.uri }}
                 style={{
