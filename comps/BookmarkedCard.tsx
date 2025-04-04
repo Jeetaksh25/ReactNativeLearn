@@ -126,7 +126,7 @@ const VideoCard: React.FC<Params> = ({
     };
 
     isBookmarked();
-  }, [user?.$id, video]);
+  }, [user?.$id, videoId]);
 
   const handleDelete = async () => {
     try {
@@ -142,6 +142,7 @@ const VideoCard: React.FC<Params> = ({
 
   useEffect(() => {
     if (Bookmarking) {
+      rotateAnim.setValue(0);
       Animated.loop(
         Animated.timing(rotateAnim, {
           toValue: 1,
@@ -151,7 +152,9 @@ const VideoCard: React.FC<Params> = ({
         })
       ).start();
     } else {
-      rotateAnim.setValue(0);
+      rotateAnim.stopAnimation(() => {
+        rotateAnim.setValue(0); 
+      });
     }
   }, [Bookmarking]);
 
@@ -192,7 +195,7 @@ const VideoCard: React.FC<Params> = ({
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleBookmark}>
+          <TouchableOpacity onPress={handleBookmark} accessibilityRole="button">
             <Animated.View
               style={{
                 transform: [{ rotate: Bookmarking ? rotation : "0deg" }],

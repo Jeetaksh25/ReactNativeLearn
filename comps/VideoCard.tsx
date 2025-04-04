@@ -142,16 +142,19 @@ const VideoCard: React.FC<Params> = ({
 
   useEffect(() => {
     if (Bookmarking) {
+      rotateAnim.setValue(0);
       Animated.loop(
         Animated.timing(rotateAnim, {
           toValue: 1,
-          duration: 1000, // Rotation speed (1s per full rotation)
+          duration: 1000,
           easing: Easing.linear,
           useNativeDriver: true,
         })
       ).start();
     } else {
-      rotateAnim.setValue(0); // Reset rotation when not bookmarking
+      rotateAnim.stopAnimation(() => {
+        rotateAnim.setValue(0); 
+      });
     }
   }, [Bookmarking]);
 
@@ -192,7 +195,7 @@ const VideoCard: React.FC<Params> = ({
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleBookmark}>
+        <TouchableOpacity onPress={handleBookmark} accessibilityRole="button">
           <Animated.View
             style={{ transform: [{ rotate: Bookmarking ? rotation : "0deg" }] }}
           >
