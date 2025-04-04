@@ -22,6 +22,7 @@ const UserProfile = () => {
     try {
       const user = await getUserById(id);
       setUserData(user);
+      console.log("Profile Selected Id ",user);
       const Posts = await userPosts(id);
       setPosts(Posts);
     } catch (error) {
