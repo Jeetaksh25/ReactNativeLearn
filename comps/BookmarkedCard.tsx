@@ -20,7 +20,7 @@ import {
   import * as FileSystem from 'expo-file-system';
   import * as MediaLibrary from 'expo-media-library';
   import { shareAsync } from "expo-sharing";
-  import { checkBookmark,bookmarkVideo,removeBookmark } from "@/lib/appwrite";
+  import { checkBookmark,bookmarkVideo,removeBookmark,deletePost } from "@/lib/appwrite";
   
   interface Params {
     video: {
@@ -43,6 +43,8 @@ import {
   }) => {
     const [playing, setPlaying] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+  
+    const [deleting, setDeleting] = useState(false);
   
     const { user } = useGlobalContext();
   
@@ -117,12 +119,18 @@ import {
       isBookmarked();
     }, [user?.$id, video]);
     
-    const handleDelete = async () => {
-      handleMenu();
+  const handleDelete = async () => {
+    try {
+      setDeleting(true);
+      await deletePost(user.$id,videoId);
+    } catch (error) {
+      throw error
+    } finally {
+      setDeleting(false);
+      setMenuOpen(false);
     }
-  
-  
-  
+  }
+
     return (isBookmarked && 
       <View style={styles.CardC}>
         <View style={styles.cardRow}>
@@ -163,7 +171,7 @@ import {
             </TouchableOpacity>
             {$id === user.$id && (
               <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-                <Text style={styles.menuText}>Delete</Text>
+                <Text style={styles.menuText}>{deleting ? "Deleting..." : "Delete"}</Text>
               </TouchableOpacity>
             )}
           </View>

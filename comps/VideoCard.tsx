@@ -20,7 +20,7 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from "expo-sharing";
-import { checkBookmark,bookmarkVideo,removeBookmark } from "@/lib/appwrite";
+import { checkBookmark,bookmarkVideo,removeBookmark,deletePost } from "@/lib/appwrite";
 
 interface Params {
   video: {
@@ -45,6 +45,8 @@ const VideoCard: React.FC<Params> = ({
   const [menuOpen, setMenuOpen] = useState(false);
 
   const { user } = useGlobalContext();
+
+  const [deleting, setDeleting] = useState(false);
 
   const [downloading, setDownloading] = useState(false);
   
@@ -118,10 +120,16 @@ const VideoCard: React.FC<Params> = ({
   }, [user?.$id, video]);
   
   const handleDelete = async () => {
-    handleMenu();
+    try {
+      setDeleting(true);
+      await deletePost(user.$id,videoId);
+    } catch (error) {
+      throw error
+    } finally {
+      setDeleting(false);
+      setMenuOpen(false);
+    }
   }
-
-
 
   return (
     <View style={styles.CardC}>
@@ -163,7 +171,7 @@ const VideoCard: React.FC<Params> = ({
           </TouchableOpacity>
           {$id === user.$id && (
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-              <Text style={styles.menuText}>Delete</Text>
+              <Text style={styles.menuText}>{deleting ? "Deleting..." : "Delete"}</Text>
             </TouchableOpacity>
           )}
         </View>
