@@ -97,7 +97,6 @@ const Profile = () => {
         router.replace("/");
       }, 1000);
     } catch (error) {
-      console.log(error);
       showAlert("error", "Something went wrong while signing out");
     } finally {
       setIsSigningOut(false);

@@ -41,14 +41,11 @@ const Search = () => {
     }
   };
 
-  console.log(data);
-  console.log(query);
 
   useEffect(() => {
     fetchData();
   }, [query]);
 
-  console.log(data);
 
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";

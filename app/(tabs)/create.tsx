@@ -69,8 +69,6 @@ const Create = () => {
       quality: 1,
     });
 
-    console.log("Picked File:", result);
-
     if (!result.canceled && result.assets?.length > 0) {
       const pickedFile = result.assets[0];
 
@@ -86,7 +84,6 @@ const Create = () => {
           ...form,
           thumbnail: fileData,
         });
-        console.log("Selected Image:", fileData);
       }
 
       if (selectType === "video") {
@@ -94,7 +91,6 @@ const Create = () => {
           ...form,
           video: fileData,
         });
-        console.log("Selected Video:", fileData);
       }
     }
   };
@@ -115,7 +111,6 @@ const Create = () => {
 
       router.push("/home");
     } catch (error) {
-      console.log(error);
       showAlert("error", "Something went wrong");
     } finally {
       setUploading(false);

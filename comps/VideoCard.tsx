@@ -87,7 +87,7 @@ const VideoCard: React.FC<Params> = ({
       );
       save(downloadResult.uri);
     } catch (error) {
-      console.log("Download error:", error);
+      throw error
     } finally {
       setDownloading(false);
       setMenuOpen(false);
@@ -95,21 +95,17 @@ const VideoCard: React.FC<Params> = ({
   };
 
   const handleBookmark = async () => {
-    console.log("Received VideoId", videoId);
-
     try {
       setBookmarking(true);
       if (await checkBookmark(user.$id, videoId)) {
         removeBookmark(user.$id, videoId);
         setIsBookmarked(false);
       } else {
-        console.log("Bookmarking Video", user.$id, videoId);
         await bookmarkVideo(user.$id, videoId);
-        console.log("Bookmarked Video", user.$id, videoId);
         setIsBookmarked(true);
       }
     } catch (error) {
-      console.error("Error bookmarking video:", error);
+      throw error
     } finally {
       setBookmarking(false);
     }

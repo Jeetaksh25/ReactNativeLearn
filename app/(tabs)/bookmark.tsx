@@ -62,7 +62,6 @@ const Bookmark = () => {
     fetchData2();
   }, []);
 
-  console.log(user);
 
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";
