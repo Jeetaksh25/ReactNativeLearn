@@ -139,26 +139,25 @@ const VideoCard: React.FC<Params> = ({
     }
   };
 
-    useEffect(() => {
-      if (Bookmarking) {
-        Animated.loop(
-          Animated.timing(rotateAnim, {
-            toValue: 1,
-            duration: 1000,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          })
-        ).start();
-      } else {
-        rotateAnim.setValue(0); 
-      }
-    }, [Bookmarking]);
-  
-    const rotation = rotateAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: ["0deg", "360deg"],
-    });
-  
+  useEffect(() => {
+    if (Bookmarking) {
+      Animated.loop(
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        })
+      ).start();
+    } else {
+      rotateAnim.setValue(0);
+    }
+  }, [Bookmarking]);
+
+  const rotation = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
   return (
     isBookmarked && (
@@ -180,20 +179,20 @@ const VideoCard: React.FC<Params> = ({
           </View>
 
           <TouchableOpacity onPress={handleBookmark}>
-          <Animated.View
-            style={{ transform: [{ rotate: Bookmarking ? rotation : "0deg" }] }}
-          >
-            <AntDesign
-              name={isBookmarked ? "star" : Bookmarking ? "star" : "staro"}
-              size={20}
-              color={
-                isBookmarked ? "orange" : Bookmarking ? "lightblue" : "white"
-              }
-            />
-          </Animated.View>
+            <Animated.View
+              style={{
+                transform: [{ rotate: Bookmarking ? rotation : "0deg" }],
+              }}
+            >
+              <AntDesign
+                name={isBookmarked ? "star" : Bookmarking ? "star" : "staro"}
+                size={20}
+                color={
+                  isBookmarked ? "orange" : Bookmarking ? "lightblue" : "white"
+                }
+              />
+            </Animated.View>
           </TouchableOpacity>
-
-
 
           <TouchableOpacity onPress={handleMenu}>
             <Entypo
