@@ -29,6 +29,7 @@ import {
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Animated, Easing } from "react-native";
+import { router } from "expo-router";
 
 interface Params {
   video: {
@@ -164,19 +165,32 @@ const VideoCard: React.FC<Params> = ({
       <View style={styles.CardC}>
         <View style={styles.cardRow}>
           <View style={styles.avatarContainer}>
-            <Image
-              source={{ uri: avatar }}
-              style={styles.avatar}
-              resizeMode="cover"
-            />
+            <TouchableOpacity
+              onPress={() =>
+                router.push({ pathname: "/profile/[id]", params: { id: $id } })
+              }
+            >
+              <Image
+                source={{ uri: avatar }}
+                style={styles.avatar}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.textContainer}>
-            <Text style={styles.title} numberOfLines={1}>
-              {title}
-            </Text>
-            <Text style={styles.username}>@{username}</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({ pathname: "/profile/[id]", params: { id: $id } })
+            }
+            style={styles.textContainer}
+          >
+            <View>
+              <Text style={styles.title} numberOfLines={1}>
+                {title}
+              </Text>
+              <Text style={styles.username}>@{username}</Text>
+            </View>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={handleBookmark}>
             <Animated.View

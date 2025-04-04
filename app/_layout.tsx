@@ -40,6 +40,7 @@ const RootLayout = () => {
         <Stack.Screen name="(tabs)" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
         <Stack.Screen name="search/[query]" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
+        <Stack.Screen name="profile/[id]" options={{ headerShown: false,statusBarBackgroundColor: "#161622" }} />
       </Stack>
     </GlobalProvider>
   );
