@@ -76,9 +76,9 @@ const Create = () => {
 
       const fileData = {
         uri: pickedFile.uri,
-        name: pickedFile.fileName || "unknown", // Fallback if fileName doesn't exist
-        type: pickedFile.mimeType || "unknown", // Fallback if mimeType doesn't exist
-        size: pickedFile.fileSize || 0, // Fallback if fileSize doesn't exist
+        name: pickedFile.fileName || "unknown", 
+        type: pickedFile.mimeType || "unknown",
+        size: pickedFile.fileSize || 0, 
       };
 
       if (selectType === "image") {
