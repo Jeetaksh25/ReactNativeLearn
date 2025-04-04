@@ -46,23 +46,6 @@ const Bookmark = () => {
     fetchData();
   }, []);
 
-  const fetchData2 = async () => {
-    setIsLoading(true);
-    try {
-      const response2 = await getLatestPosts();
-      setLatestPosts(response2);
-    } catch (error) {
-      showAlert("error", "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData2();
-  }, []);
-
-
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";
     message: string;
@@ -83,7 +66,6 @@ const Bookmark = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     fetchData();
-    fetchData2();
     setRefreshing(false);
   };
 

@@ -35,6 +35,7 @@ const Home = () => {
     try {
       const response = await getAllPosts();
       setData(response);
+      console.log("Posts",data)
     } catch (error) {
       showAlert("error", "Something went wrong");
     } finally {
