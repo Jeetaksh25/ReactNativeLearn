@@ -7,7 +7,7 @@ import {
   Button,
   Platform,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { theme } from "../theme/theme";
 import colors, { gray } from "tailwindcss/colors";
 import { icons } from "../constants";
@@ -28,6 +28,7 @@ import {
 } from "@/lib/appwrite";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { Animated, Easing } from "react-native";
 
 interface Params {
   video: {
@@ -64,6 +65,8 @@ const VideoCard: React.FC<Params> = ({
 
   const [isBookmarked, setIsBookmarked] = useState(false);
 
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+
   const handleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
@@ -87,7 +90,7 @@ const VideoCard: React.FC<Params> = ({
       );
       save(downloadResult.uri);
     } catch (error) {
-      throw error
+      throw error;
     } finally {
       setDownloading(false);
       setMenuOpen(false);
@@ -105,7 +108,7 @@ const VideoCard: React.FC<Params> = ({
         setIsBookmarked(true);
       }
     } catch (error) {
-      throw error
+      throw error;
     } finally {
       setBookmarking(false);
     }
@@ -136,6 +139,26 @@ const VideoCard: React.FC<Params> = ({
     }
   };
 
+  useEffect(() => {
+    if (Bookmarking) {
+      Animated.loop(
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 1000, // Rotation speed (1s per full rotation)
+          easing: Easing.linear,
+          useNativeDriver: true,
+        })
+      ).start();
+    } else {
+      rotateAnim.setValue(0); // Reset rotation when not bookmarking
+    }
+  }, [Bookmarking]);
+
+  const rotation = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
   return (
     <View style={styles.CardC}>
       <View style={styles.cardRow}>
@@ -155,11 +178,17 @@ const VideoCard: React.FC<Params> = ({
         </View>
 
         <TouchableOpacity onPress={handleBookmark}>
-          <AntDesign
-            name={isBookmarked ? "star" : "staro"}
-            size={20}
-            color={isBookmarked ? "orange" : "white"}
-          />
+          <Animated.View
+            style={{ transform: [{ rotate: Bookmarking ? rotation : "0deg" }] }}
+          >
+            <AntDesign
+              name={isBookmarked ? "star" : Bookmarking ? "star" : "staro"}
+              size={20}
+              color={
+                isBookmarked ? "orange" : Bookmarking ? "lightblue" : "white"
+              }
+            />
+          </Animated.View>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleMenu}>
