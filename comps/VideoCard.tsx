@@ -86,24 +86,28 @@ const VideoCard: React.FC<Params> = ({
   };
 
   const handleBookmark = async () => {
+
+    console.log("Received VideoId",videoId);
+
     try {
-      await bookmarkVideo(user.$id,videoId);
-      console.log("Bookmarked Video",user.$id,videoId)
-      setIsBookmarked(true);
+      if(await checkBookmark(user.$id,videoId)){
+        removeBookmark(user.$id,videoId);
+        setIsBookmarked(false)
+      }
+      else {
+        await bookmarkVideo(user.$id,videoId);
+        console.log("Bookmarked Video",user.$id,videoId)
+        setIsBookmarked(true);
+      }
     } catch (error) {
       console.error("Error bookmarking video:", error);
     }
   };
-  
-  const handleDelete = async () => {
-    handleMenu();
-  }
 
   useEffect(() => {
     const isBookmarked = async () => {
       try {
         const videoBM = await checkBookmark(user.$id,videoId);
-        console.log("Video is bookmarked:", videoBM);
         setIsBookmarked(videoBM);
       } catch (error) {
         console.error("Error checking bookmark:", error);
@@ -112,6 +116,12 @@ const VideoCard: React.FC<Params> = ({
   
     isBookmarked();
   }, [user?.$id, video]);
+  
+  const handleDelete = async () => {
+    handleMenu();
+  }
+
+
 
   return (
     <View style={styles.CardC}>
