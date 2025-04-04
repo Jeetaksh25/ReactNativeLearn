@@ -7,7 +7,7 @@ import {
   Button,
   Platform
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "../theme/theme";
 import colors, { gray } from "tailwindcss/colors";
 import { icons } from "../constants";
@@ -20,6 +20,7 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { shareAsync } from "expo-sharing";
+import { checkBookmark,bookmarkVideo,removeBookmark } from "@/lib/appwrite";
 
 interface Params {
   video: {
@@ -27,6 +28,7 @@ interface Params {
     thumbnail: string;
     video: string;
     creator: { username: string; avatar: string; $id: string };
+    $id: string;
   };
 }
 
@@ -36,15 +38,20 @@ const VideoCard: React.FC<Params> = ({
     thumbnail,
     video,
     creator: { username, avatar, $id },
+    $id: videoId,
   },
 }) => {
   const [playing, setPlaying] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const { user } = useGlobalContext();
+
   const [downloading, setDownloading] = useState(false);
   
   const videoUrl = video;
   const videoId2 = videoUrl.match(/files\/([^/]+)\/view/)?.[1] as string;
+
+  const [isBookmarked,setIsBookmarked] = useState(false);
 
   const handleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -79,14 +86,32 @@ const VideoCard: React.FC<Params> = ({
   };
 
   const handleBookmark = async () => {
-    handleMenu();
+    try {
+      await bookmarkVideo(user.$id,videoId);
+      console.log("Bookmarked Video",user.$id,videoId)
+      setIsBookmarked(true);
+    } catch (error) {
+      console.error("Error bookmarking video:", error);
+    }
   };
   
   const handleDelete = async () => {
     handleMenu();
   }
 
-  const { user } = useGlobalContext();
+  useEffect(() => {
+    const isBookmarked = async () => {
+      try {
+        const videoBM = await checkBookmark(user.$id,videoId);
+        console.log("Video is bookmarked:", videoBM);
+        setIsBookmarked(videoBM);
+      } catch (error) {
+        console.error("Error checking bookmark:", error);
+      }
+    };
+  
+    isBookmarked();
+  }, [user?.$id, video]);
 
   return (
     <View style={styles.CardC}>
@@ -124,7 +149,7 @@ const VideoCard: React.FC<Params> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
-            <Text style={styles.menuText}>Bookmark</Text>
+            <Text style={styles.menuText}>{isBookmarked ? "Bookmarked" : "Bookmark"}</Text>
           </TouchableOpacity>
           {$id === user.$id && (
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
