@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
-  Platform
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { theme } from "../theme/theme";
@@ -17,10 +17,17 @@ import { Video, ResizeMode } from "expo-av";
 import { downloadVideo } from "@/lib/appwrite";
 import * as fD from "expo-file-system";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import * as FileSystem from 'expo-file-system';
-import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
 import { shareAsync } from "expo-sharing";
-import { checkBookmark,bookmarkVideo,removeBookmark,deletePost } from "@/lib/appwrite";
+import {
+  checkBookmark,
+  bookmarkVideo,
+  removeBookmark,
+  deletePost,
+} from "@/lib/appwrite";
+import Feather from "react-native-vector-icons/Feather";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 interface Params {
   video: {
@@ -48,14 +55,14 @@ const VideoCard: React.FC<Params> = ({
 
   const [deleting, setDeleting] = useState(false);
 
-  const [Bookmarking,setBookmarking] = useState(false);
+  const [Bookmarking, setBookmarking] = useState(false);
 
   const [downloading, setDownloading] = useState(false);
-  
+
   const videoUrl = video;
   const videoId2 = videoUrl.match(/files\/([^/]+)\/view/)?.[1] as string;
 
-  const [isBookmarked,setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const handleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -63,10 +70,9 @@ const VideoCard: React.FC<Params> = ({
 
   const save = (uri: string) => {
     shareAsync(uri);
-  }
+  };
 
   const handleDownload = async (videoId2: string) => {
-
     try {
       setDownloading(true);
       const fileUrl = await downloadVideo(videoId2);
@@ -79,8 +85,7 @@ const VideoCard: React.FC<Params> = ({
         fileUrl.toString(),
         fileUri
       );
-      save(downloadResult.uri)
-
+      save(downloadResult.uri);
     } catch (error) {
       console.log("Download error:", error);
     } finally {
@@ -90,18 +95,17 @@ const VideoCard: React.FC<Params> = ({
   };
 
   const handleBookmark = async () => {
-
-    console.log("Received VideoId",videoId);
+    console.log("Received VideoId", videoId);
 
     try {
       setBookmarking(true);
-      if(await checkBookmark(user.$id,videoId)){
-        removeBookmark(user.$id,videoId);
-        setIsBookmarked(false)
-      }
-      else {
-        await bookmarkVideo(user.$id,videoId);
-        console.log("Bookmarked Video",user.$id,videoId)
+      if (await checkBookmark(user.$id, videoId)) {
+        removeBookmark(user.$id, videoId);
+        setIsBookmarked(false);
+      } else {
+        console.log("Bookmarking Video", user.$id, videoId);
+        await bookmarkVideo(user.$id, videoId);
+        console.log("Bookmarked Video", user.$id, videoId);
         setIsBookmarked(true);
       }
     } catch (error) {
@@ -114,27 +118,27 @@ const VideoCard: React.FC<Params> = ({
   useEffect(() => {
     const isBookmarked = async () => {
       try {
-        const videoBM = await checkBookmark(user.$id,videoId);
+        const videoBM = await checkBookmark(user.$id, videoId);
         setIsBookmarked(videoBM);
       } catch (error) {
         console.error("Error checking bookmark:", error);
       }
     };
-  
+
     isBookmarked();
   }, [user?.$id, video]);
-  
+
   const handleDelete = async () => {
     try {
       setDeleting(true);
-      await deletePost(user.$id,videoId);
+      await deletePost(user.$id, videoId);
     } catch (error) {
-      throw error
+      throw error;
     } finally {
       setDeleting(false);
       setMenuOpen(false);
     }
-  }
+  };
 
   return (
     <View style={styles.CardC}>
@@ -153,6 +157,15 @@ const VideoCard: React.FC<Params> = ({
           </Text>
           <Text style={styles.username}>@{username}</Text>
         </View>
+
+        <TouchableOpacity onPress={handleBookmark}>
+          <AntDesign
+            name={isBookmarked ? "star" : "staro"}
+            size={20}
+            color={isBookmarked ? "orange" : "white"}
+          />
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={handleMenu}>
           <Entypo
             name="dots-three-vertical"
@@ -171,12 +184,12 @@ const VideoCard: React.FC<Params> = ({
               {downloading ? "Downloading..." : "Download"}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
-            <Text style={styles.menuText}>{isBookmarked ? "Bookmarked" : Bookmarking ? "Bookmarking..." : "Bookmark"}</Text>
-          </TouchableOpacity>
           {$id === user.$id && (
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
-              <Text style={styles.menuText}>{deleting ? "Deleting..." : "Delete"}</Text>
+              <Text style={styles.menuText}>
+                {deleting ? "Deleting..." : "Delete"}{" "}
+                <Feather name="trash-2" size={15} />
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -308,7 +321,7 @@ const styles = StyleSheet.create({
   menuText: {
     color: "white",
     fontSize: theme.fontSize.sm,
-    textAlign: "center",  
+    textAlign: "center",
   },
 });
 

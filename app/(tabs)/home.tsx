@@ -22,6 +22,7 @@ import { getAllPosts } from "../../lib/appwrite";
 import { getLatestPosts } from "../../lib/appwrite";
 import VideoCard from "../../comps/VideoCard";
 
+
 const Home = () => {
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
