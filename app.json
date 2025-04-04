@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Aora",
-    "slug": "Aora",
+    "slug": "Test1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo-small.png",
@@ -28,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo.png",
+          "image": "./assets/images/logo-small.png",
           "imageWidth": 100,
           "resizeMode": "contain",
           "backgroundColor": "#000000"
