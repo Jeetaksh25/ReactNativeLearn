@@ -48,6 +48,8 @@ const VideoCard: React.FC<Params> = ({
 
   const [deleting, setDeleting] = useState(false);
 
+  const [Bookmarking,setBookmarking] = useState(false);
+
   const [downloading, setDownloading] = useState(false);
   
   const videoUrl = video;
@@ -92,6 +94,7 @@ const VideoCard: React.FC<Params> = ({
     console.log("Received VideoId",videoId);
 
     try {
+      setBookmarking(true);
       if(await checkBookmark(user.$id,videoId)){
         removeBookmark(user.$id,videoId);
         setIsBookmarked(false)
@@ -103,6 +106,8 @@ const VideoCard: React.FC<Params> = ({
       }
     } catch (error) {
       console.error("Error bookmarking video:", error);
+    } finally {
+      setBookmarking(false);
     }
   };
 
@@ -167,7 +172,7 @@ const VideoCard: React.FC<Params> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
-            <Text style={styles.menuText}>{isBookmarked ? "Bookmarked" : "Bookmark"}</Text>
+            <Text style={styles.menuText}>{isBookmarked ? "Bookmarked" : Bookmarking ? "Bookmarking..." : "Bookmark"}</Text>
           </TouchableOpacity>
           {$id === user.$id && (
             <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
