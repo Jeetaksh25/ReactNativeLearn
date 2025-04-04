@@ -159,7 +159,7 @@ import {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleBookmark}>
-              <Text style={styles.menuText}>{isBookmarked ? "Bookmarked" : "Bookmark"}</Text>
+              <Text style={styles.menuText}>{isBookmarked ? "Remove" : "Bookmark"}</Text>
             </TouchableOpacity>
             {$id === user.$id && (
               <TouchableOpacity style={styles.menuItem} onPress={handleDelete}>
