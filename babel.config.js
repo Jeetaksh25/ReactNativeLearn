@@ -31,6 +31,7 @@ module.exports = function (api) {
               "APPWRITE_VIDEO_COLLECTION_ID",
               "APPWRITE_STORAGE_ID"
             ]
+  
           }
         ]
       ]
