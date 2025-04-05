@@ -45,7 +45,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [data]);
 
   const fetchData2 = async () => {
     setIsLoading(true);
@@ -61,7 +61,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData2();
-  }, []);
+  }, [latestPosts]);
 
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";

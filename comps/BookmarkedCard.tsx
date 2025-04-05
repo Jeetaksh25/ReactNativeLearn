@@ -41,7 +41,7 @@ interface Params {
   };
 }
 
-const VideoCard: React.FC<Params> = ({
+const BookmarkedCard: React.FC<Params> = ({
   video: {
     title,
     thumbnail,
@@ -115,19 +115,6 @@ const VideoCard: React.FC<Params> = ({
     }
   };
 
-  useEffect(() => {
-    const isBookmarked = async () => {
-      try {
-        const videoBM = await checkBookmark(user.$id, videoId);
-        setIsBookmarked(videoBM);
-      } catch (error) {
-        console.error("Error checking bookmark:", error);
-      }
-    };
-
-    isBookmarked();
-  }, [user?.$id, videoId]);
-
   const handleDelete = async () => {
     try {
       setDeleting(true);
@@ -153,7 +140,7 @@ const VideoCard: React.FC<Params> = ({
       ).start();
     } else {
       rotateAnim.stopAnimation(() => {
-        rotateAnim.setValue(0); 
+        rotateAnim.setValue(0);
       });
     }
   }, [Bookmarking]);
@@ -163,8 +150,7 @@ const VideoCard: React.FC<Params> = ({
     outputRange: ["0deg", "360deg"],
   });
 
-  return (
-    isBookmarked && (
+  return ( 
       <View style={styles.CardC}>
         <View style={styles.cardRow}>
           <View style={styles.avatarContainer}>
@@ -270,7 +256,6 @@ const VideoCard: React.FC<Params> = ({
           </TouchableOpacity>
         )}
       </View>
-    )
   );
 };
 
@@ -371,4 +356,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VideoCard;
+export default BookmarkedCard;

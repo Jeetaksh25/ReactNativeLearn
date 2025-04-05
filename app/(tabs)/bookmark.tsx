@@ -18,22 +18,19 @@ import SearchInput from "../../comps/SearchInput";
 import Trending from "../../comps/Trending";
 import EmptyState from "../../comps/EmptyState";
 import AlertBox from "../../comps/AlertBox";
-import { getAllPosts } from "../../lib/appwrite";
-import { getLatestPosts } from "../../lib/appwrite";
+import { getAllPosts,fetchBookmarks } from "../../lib/appwrite";
 import VideoCard from "../../comps/VideoCard";
 import BookmarkedCard from "../../comps/BookmarkedCard"
 
 const Bookmark = () => {
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [latestPosts, setLatestPosts] = useState<any>([]);
-
   const { user } = useGlobalContext();
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const response = await getAllPosts();
+      const response = await fetchBookmarks(user.$id);
       setData(response);
     } catch (error) {
       showAlert("error", "Something went wrong");
@@ -44,7 +41,7 @@ const Bookmark = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [data]);
 
   const [alert, setAlert] = useState<{
     type: "error" | "success" | "muted" | "warning" | "info";
