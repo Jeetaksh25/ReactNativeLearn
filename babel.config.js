@@ -30,8 +30,9 @@ module.exports = function (api) {
               "APPWRITE_USER_COLLECTION_ID",
               "APPWRITE_VIDEO_COLLECTION_ID",
               "APPWRITE_STORAGE_ID"
-            ]
-  
+            ],
+            safe: false,
+            allowUndefined: false
           }
         ]
       ]

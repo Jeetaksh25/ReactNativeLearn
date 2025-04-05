@@ -25,7 +25,7 @@ const TabsLayout = () => {
           options={{
             title: "Home",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color, focused }:{color:string,focused:boolean}) => (
               <AntDesign
                 name="home"
                 color={color}
@@ -42,7 +42,7 @@ const TabsLayout = () => {
           options={{
             title: "Bookmark",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color, focused }:{color:string,focused:boolean}) => (
               <AntDesign
                 name="staro"
                 color={color}
@@ -59,7 +59,7 @@ const TabsLayout = () => {
           options={{
             title: "Create",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color, focused }:{color:string,focused:boolean}) => (
               <AntDesign
                 name="plus"
                 color={color}
@@ -76,7 +76,7 @@ const TabsLayout = () => {
           options={{
             title: "Profile",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color, focused }:{color:string,focused:boolean}) => (
               <AntDesign
                 name="user"
                 color={color}
